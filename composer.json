@@ -1,0 +1,23 @@
+{
+    "name": "dq/rest",
+    "description": "All you need to quickly create REST controllers",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Stas Karpov",
+            "email": "gilbert_90@mail.ru"
+        }
+    ],
+    "require": {
+        "watson/validating": "^3.0"
+    },
+    "autoload": {
+        "classmap": [
+            "database"
+        ],
+        "psr-4": {
+            "Dq\\Rest\\": "src/"
+        }
+    }
+
+}
