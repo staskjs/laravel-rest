@@ -13,7 +13,6 @@
     },
     "autoload": {
         "classmap": [
-            "database"
         ],
         "psr-4": {
             "Dq\\Rest\\": "src/"
