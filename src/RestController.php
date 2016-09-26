@@ -16,9 +16,15 @@ class RestController extends Controller {
 
     protected $only_meta = false;
 
+    protected $indexRequest;
+
+    protected $showRequest;
+
     protected $storeRequest;
 
     protected $updateRequest;
+
+    protected $destroyRequest;
 
     // Override this field to include custom fields to each item in list
     // See laravel append attributes
