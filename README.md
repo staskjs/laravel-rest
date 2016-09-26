@@ -35,3 +35,15 @@ Then register service provider in `config/app.php`:
 Then just extend your controller from `\Dq\Rest\RestController`,
 register `resource` route (`Route::resource`) pointing to your controller
 and you are good to go!
+
+## Usage
+
+You can add Form Request Validation to every request there is.
+
+Simple override these parameters with class to use.
+
+    protected $storeRequest = ModelStoreRequest::class;
+
+    // Same with other requests, if needed
+
+For simpler approach to validation, override `rules` method to return array of validation rules.

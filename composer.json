@@ -8,9 +8,6 @@
             "email": "gilbert_90@mail.ru"
         }
     ],
-    "require": {
-        "watson/validating": "^3.0"
-    },
     "autoload": {
         "classmap": [
         ],

@@ -16,11 +16,19 @@ class RestController extends Controller {
 
     protected $only_meta = false;
 
+    protected $storeRequest;
+
+    protected $updateRequest;
+
     // Override this field to include custom fields to each item in list
     // See laravel append attributes
     protected $append = [];
 
     public function index() {
+        if ($this->indexRequest) {
+            app()->make($this->indexRequest);
+        }
+
         $this->retreiveListParams();
 
         $model = $this->getModel();
@@ -35,68 +43,75 @@ class RestController extends Controller {
     }
 
     public function show($id) {
+        if ($this->showRequest) {
+            app()->make($this->showRequest);
+        }
+
         $object = $this->getItem($id);
         $object = $this->appendAttributes($object, $this->append);
         return response()->json($object);
     }
 
     public function store() {
+        if ($this->storeRequest) {
+            app()->make($this->storeRequest);
+        }
+
         $model = $this->getModel();
 
         return \DB::transaction(function() use ($model) {
             $data = $this->getRequestData();
 
+            $validator = \Validator::make($data, $this->rules());
+            if ($validator->fails()) {
+                \DB::rollBack();
+                return response()->json($validator->errors(), 406);
+            }
+
             $object = new $model();
             $object->fill($data);
             $object = $this->beforeSave($object);
 
-            if ($object->save()) {
-                $this->afterSave($object);
+            $object->save();
+            $this->afterSave($object);
 
-                // Can still have errors (from nested relations for example)
-                if (!$object->getErrors()->isEmpty()) {
-                    \DB::rollBack();
-                    return response()->json($object->getErrors(), 406);
-                }
-                \DB::commit();
-                return response()->json($object);
-            }
-            else {
-                \DB::rollBack();
-                return response()->json($object->getErrors(), 406);
-            }
+            \DB::commit();
+            return response()->json($object);
         });
     }
 
     public function update($id) {
+        if ($this->updateRequest) {
+            app()->make($this->updateRequest);
+        }
+
         $model = $this->getModel();
 
         return \DB::transaction(function() use ($model, $id) {
             $data = $this->getRequestData();
+
+            $validator = \Validator::make($data, $this->rules());
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 406);
+            }
+
             $object = $model::find($id);
             $object->fill($data);
             $object = $this->beforeSave($object);
 
-            if ($object->save() || $object->isClean()) {
-                $this->afterSave($object);
+            $object->save();
+            $this->afterSave($object);
 
-                // Can still have errors (from nested relations for example)
-                if (!$object->getErrors()->isEmpty()) {
-                    \DB::rollBack();
-                    return response()->json($object->getErrors(), 406);
-                }
-                \DB::commit();
-
-                return response()->json($object);
-            }
-            else {
-                \DB::rollBack();
-                return response()->json($object->getErrors(), 406);
-            }
+            \DB::commit();
+            return response()->json($object);
         });
     }
 
     public function destroy($id) {
+        if ($this->destroyRequest) {
+            app()->make($this->destroyRequest);
+        }
+
         $model = $this->getModel();
 
         return \DB::transaction(function() use ($model, $id) {
@@ -210,6 +225,11 @@ class RestController extends Controller {
             $items->append($attributes);
         }
         return $items;
+    }
+
+    // Override this method to add validation rules
+    protected function rules() {
+        return [];
     }
 
 }
