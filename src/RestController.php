@@ -68,10 +68,11 @@ class RestController extends Controller {
         return \DB::transaction(function() use ($model) {
             $data = $this->getRequestData();
 
-            $validator = \Validator::make($data, $this->rules());
-            if ($validator->fails()) {
-                \DB::rollBack();
-                return response()->json($validator->errors(), 406);
+            if (!$this->storeRequest) {
+                $validator = \Validator::make($data, $this->rules());
+                if ($validator->fails()) {
+                    return response()->json($validator->errors(), 406);
+                }
             }
 
             $object = new $model();
@@ -96,9 +97,11 @@ class RestController extends Controller {
         return \DB::transaction(function() use ($model, $id) {
             $data = $this->getRequestData();
 
-            $validator = \Validator::make($data, $this->rules());
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 406);
+            if (!$this->updateRequest) {
+                $validator = \Validator::make($data, $this->rules());
+                if ($validator->fails()) {
+                    return response()->json($validator->errors(), 406);
+                }
             }
 
             $object = $model::find($id);
