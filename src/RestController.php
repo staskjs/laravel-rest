@@ -16,6 +16,10 @@ class RestController extends Controller {
 
     protected $only_meta = false;
 
+    protected $with = [];
+
+    protected $allowedWith = [];
+
     protected $indexRequest;
 
     protected $showRequest;
@@ -177,6 +181,10 @@ class RestController extends Controller {
         if (request()->has('only_data')) {
             $this->only_data = request('only_data');
         }
+
+        if (request()->has('with')) {
+            $this->with = explode(',', request('with'));
+        }
     }
 
     // Override this method if you want custom logic on how to
@@ -186,7 +194,7 @@ class RestController extends Controller {
     protected function getItems() {
         $model = $this->getModel();
         $model = new $model();
-        $result = $this->getFiltered()->orderBy($model->getTable().'.'.$this->sort, $this->order)->paginate($this->items_per_page);
+        $result = $this->getFiltered()->with($this->getWith())->orderBy($model->getTable().'.'.$this->sort, $this->order)->paginate($this->items_per_page);
         $this->appendAttributes($result->items(), $this->append);
         return [
             'items' => $result->items(),
@@ -239,6 +247,13 @@ class RestController extends Controller {
     // Override this method to add validation rules
     protected function rules() {
         return [];
+    }
+
+    // Filter "with" parameter against "allowedWith"
+    protected function getWith() {
+        return collect($this->with)->filter(function ($item) {
+            return in_array($item, $this->allowedWith);
+        })->toArray();
     }
 
 }
