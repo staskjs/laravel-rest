@@ -87,7 +87,7 @@ class RestController extends Controller {
             $this->afterSave($object);
 
             \DB::commit();
-            return response()->json($object);
+            return response()->json($this->appendAttributes($object, $this->append));
         });
     }
 
@@ -116,7 +116,7 @@ class RestController extends Controller {
             $this->afterSave($object);
 
             \DB::commit();
-            return response()->json($object);
+            return response()->json($this->appendAttributes($object, $this->append));
         });
     }
 
