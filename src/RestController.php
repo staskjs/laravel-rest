@@ -52,12 +52,12 @@ class RestController extends Controller {
         return $this->response($items['items'], ['total' => $items['total']]);
     }
 
-    public function show($id) {
+    public function show($item) {
         if ($this->showRequest) {
             app()->make($this->showRequest);
         }
 
-        $object = $this->getItem($id);
+        $object = $this->getItem($item);
         $object = $this->appendAttributes($object, $this->append);
         return response()->json($object);
     }
@@ -84,21 +84,21 @@ class RestController extends Controller {
             $object = $this->beforeSave($object);
 
             $object->save();
-            $this->afterSave($object);
+            $this->afterSave($object, true);
 
             \DB::commit();
             return response()->json($this->appendAttributes($object, $this->append));
         });
     }
 
-    public function update($id) {
+    public function update($item) {
         if ($this->updateRequest) {
             app()->make($this->updateRequest);
         }
 
         $model = $this->getModel();
 
-        return \DB::transaction(function() use ($model, $id) {
+        return \DB::transaction(function() use ($model, $item) {
             $data = $this->getRequestData();
 
             if (!$this->updateRequest) {
@@ -108,28 +108,28 @@ class RestController extends Controller {
                 }
             }
 
-            $object = $model::find($id);
+            $object = $this->getItem($item);
             $object->fill($data);
             $object = $this->beforeSave($object);
 
             $object->save();
-            $this->afterSave($object);
+            $this->afterSave($object, false);
 
             \DB::commit();
             return response()->json($this->appendAttributes($object, $this->append));
         });
     }
 
-    public function destroy($id) {
+    public function destroy($item) {
         if ($this->destroyRequest) {
             app()->make($this->destroyRequest);
         }
 
         $model = $this->getModel();
 
-        return \DB::transaction(function() use ($model, $id) {
+        return \DB::transaction(function() use ($model, $item) {
             $data = $this->getRequestData();
-            $object = $model::find($id);
+            $object = $this->getItem($item);
             $object->fill($data);
             $object->delete();
 
@@ -204,9 +204,14 @@ class RestController extends Controller {
 
     // Override this method if you want custom logic of
     // retrieving single item
-    protected function getItem($id) {
-        $model = $this->getModel();
-        return $model::find($id);
+    protected function getItem($item) {
+        if (is_object($item)) {
+            return $item;
+        }
+        else {
+            $model = $this->getModel();
+            return $model::find($item);
+        }
     }
 
     // Override this method to add filtering
@@ -221,7 +226,7 @@ class RestController extends Controller {
     }
 
     // Override this method if you want to do something with model after it is saved
-    protected function afterSave($model) {
+    protected function afterSave($model, $isNew) {
         return $model;
     }
 
