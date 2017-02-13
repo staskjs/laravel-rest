@@ -36,6 +36,11 @@ Then just extend your controller from `\Dq\Rest\RestController`,
 register `resource` route (`Route::resource`) pointing to your controller
 and you are good to go!
 
+You can also use our custom exception handler that will translate some laravel errors to json format
+if request is made from ajax.
+
+In `bootstrap/app.php` add new exception handler `Dq\Rest\Exceptions\Handler.php`.
+
 ## Usage
 
 You can add Form Request Validation to every request there is.
