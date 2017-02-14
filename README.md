@@ -39,7 +39,7 @@ and you are good to go!
 You can also use our custom exception handler that will translate some laravel errors to json format
 if request is made from ajax.
 
-In `bootstrap/app.php` add new exception handler `Dq\Rest\Exceptions\Handler.php`.
+In `app/Exceptions/Handler.php` inherit handler from `\Dq\Rest\Exceptions\Handler`.
 
 ## Usage
 
