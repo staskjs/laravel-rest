@@ -84,7 +84,7 @@ class RestController extends Controller {
             $object = $this->beforeSave($object);
 
             $object->save();
-            $this->afterSave($object, true);
+            $this->afterSave($object);
 
             \DB::commit();
             return response()->json($this->appendAttributes($object, $this->append));
@@ -113,7 +113,7 @@ class RestController extends Controller {
             $object = $this->beforeSave($object);
 
             $object->save();
-            $this->afterSave($object, false);
+            $this->afterSave($object);
 
             \DB::commit();
             return response()->json($this->appendAttributes($object, $this->append));
@@ -226,7 +226,7 @@ class RestController extends Controller {
     }
 
     // Override this method if you want to do something with model after it is saved
-    protected function afterSave($model, $isNew) {
+    protected function afterSave($model) {
         return $model;
     }
 
