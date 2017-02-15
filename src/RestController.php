@@ -205,12 +205,15 @@ class RestController extends Controller {
     // Override this method if you want custom logic of
     // retrieving single item
     protected function getItem($item) {
+        $this->retreiveListParams();
+
         if (is_object($item)) {
+            $item->load($this->getWith());
             return $item;
         }
         else {
             $model = $this->getModel();
-            return $model::find($item);
+            return $model::find($item)->with($this->getWith());
         }
     }
 
