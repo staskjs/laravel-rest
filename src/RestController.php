@@ -213,7 +213,7 @@ class RestController extends Controller {
         }
         else {
             $model = $this->getModel();
-            return $model::find($item)->with($this->getWith());
+            return $model::with($this->getWith())->find($item);
         }
     }
 
