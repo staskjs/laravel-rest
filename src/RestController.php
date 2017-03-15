@@ -1,6 +1,7 @@
 <?php namespace Dq\Rest;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RestController extends Controller {
 
@@ -19,6 +20,8 @@ class RestController extends Controller {
     protected $with = [];
 
     protected $allowedWith = [];
+
+    protected $showTrashed = false;
 
     protected $indexRequest;
 
@@ -185,6 +188,10 @@ class RestController extends Controller {
         if (request()->has('with')) {
             $this->with = explode(',', request('with'));
         }
+
+        if (request()->has('showTrashed')) {
+            $this->showTrashed = request('showTrashed') == 'true';
+        }
     }
 
     // Override this method if you want custom logic on how to
@@ -220,7 +227,14 @@ class RestController extends Controller {
     // Override this method to add filtering
     protected function getFiltered() {
         $model = $this->getModel();
-        return new $model();
+
+        $model = new $model();
+
+        if ($this->isSoftDeletable() && $this->showTrashed) {
+            $model = $model->withTrashed();
+        }
+
+        return $model;
     }
 
     // Override this method if you want to modify model before saving it
@@ -262,6 +276,12 @@ class RestController extends Controller {
         return collect($this->with)->filter(function ($item) {
             return in_array($item, $this->allowedWith);
         })->toArray();
+    }
+
+    // Check that model is soft deletable
+    protected function isSoftDeletable() {
+        $traits = class_uses($this->getModel());
+        return in_array(SoftDeletes::class, $traits);
     }
 
 }
