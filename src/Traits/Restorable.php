@@ -13,9 +13,7 @@ trait Restorable {
             app()->make($this->restoreRequest);
         }
 
-        $model = $this->getModel();
-
-        return \DB::transaction(function() use ($model, $item) {
+        return \DB::transaction(function() use ($item) {
             $object = $this->getItem($item, true);
             $object->restore();
 
