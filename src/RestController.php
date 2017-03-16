@@ -189,8 +189,8 @@ class RestController extends Controller {
             $this->with = explode(',', request('with'));
         }
 
-        if (request()->has('showTrashed')) {
-            $this->showTrashed = request('showTrashed') == 'true';
+        if (request()->has('show_trashed')) {
+            $this->showTrashed = request('show_trashed') == 'true';
         }
     }
 
