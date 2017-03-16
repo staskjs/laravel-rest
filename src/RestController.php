@@ -211,7 +211,7 @@ class RestController extends Controller {
 
     // Override this method if you want custom logic of
     // retrieving single item
-    protected function getItem($item) {
+    protected function getItem($item, $withTrashed = false) {
         $this->retreiveListParams();
 
         if (is_object($item)) {
@@ -220,7 +220,12 @@ class RestController extends Controller {
         }
         else {
             $model = $this->getModel();
-            return $model::with($this->getWith())->find($item);
+            $builder = $model::with($this->getWith());
+            if ($this->isSoftDeletable() && $withTrashed) {
+                $builder = $builder->withTrashed();
+            }
+
+            return $builder->whereId($item)->first();
         }
     }
 
