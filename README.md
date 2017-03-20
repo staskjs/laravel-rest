@@ -16,30 +16,20 @@ Please refer to [source code](src/RestController.php) to see what you can do.
 
 ## Installation
 
-Add this to your `composer.json` file:
-
-    "require": {
-        "dq/rest": "dev-master"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "http://gitlab.digitalquill.co.uk/useful/laravel-rest.git"
-        }
-    ]
+    composer require staskjs/laravel-rest
 
 Then register service provider in `config/app.php`:
 
-    Dq\Rest\RestServiceProvider::class
+    Staskjs\Rest\RestServiceProvider::class
 
-Then just extend your controller from `\Dq\Rest\RestController`,
+Then just extend your controller from `\Staskjs\Rest\RestController`,
 register `resource` route (`Route::resource`) pointing to your controller
 and you are good to go!
 
 You can also use our custom exception handler that will translate some laravel errors to json format
 if request is made from ajax.
 
-In `app/Exceptions/Handler.php` inherit handler from `\Dq\Rest\Exceptions\Handler`.
+In `app/Exceptions/Handler.php` inherit handler from `\Staskjs\Rest\Exceptions\Handler`.
 
 ## Usage
 
