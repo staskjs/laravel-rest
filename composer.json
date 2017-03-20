@@ -1,5 +1,5 @@
 {
-    "name": "staskjs/rest",
+    "name": "staskjs/laravel-rest",
     "description": "All you need to quickly create REST controllers",
     "type": "library",
     "authors": [
