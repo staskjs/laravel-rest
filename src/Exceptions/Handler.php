@@ -1,6 +1,6 @@
 <?php
 
-namespace Dq\Rest\Exceptions;
+namespace Staskjs\Rest\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;

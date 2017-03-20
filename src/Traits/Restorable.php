@@ -1,6 +1,6 @@
 <?php
 
-namespace Dq\Rest\Traits;
+namespace Staskjs\Rest\Traits;
 
 trait Restorable {
 

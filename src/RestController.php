@@ -1,4 +1,4 @@
-<?php namespace Dq\Rest;
+<?php namespace Staskjs\Rest;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\SoftDeletes;

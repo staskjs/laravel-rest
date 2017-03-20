@@ -1,6 +1,6 @@
 <?php
 
-namespace Dq\Rest;
+namespace Staskjs\Rest;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +23,6 @@ class RestServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make('Dq\Rest\RestController');
+        $this->app->make('Staskjs\Rest\RestController');
     }
 }
