@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f60a659898b2a8794a69e1fe460c30eb",
-    "content-hash": "85721785fbce2bf4c4555d2d8e73776e",
+    "hash": "cf2048e418ca4618b0b145886393b851",
+    "content-hash": "430151c06b72a1f554463a206959e984",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -465,6 +465,37 @@
                 "random"
             ],
             "time": "2016-04-03 06:00:07"
+        },
+        {
+            "name": "staskjs/laravel-utils",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/staskjs/laravel-utils.git",
+                "reference": "70c8cf37cfbaf92f01dd6c6dd8f3ecc4843cbebd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/staskjs/laravel-utils/zipball/70c8cf37cfbaf92f01dd6c6dd8f3ecc4843cbebd",
+                "reference": "70c8cf37cfbaf92f01dd6c6dd8f3ecc4843cbebd",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [],
+                "psr-4": {
+                    "Staskjs\\LaravelUtils\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Stas Karpov",
+                    "email": "staskjs@mail.ru"
+                }
+            ],
+            "description": "Collection of utils for laravel",
+            "time": "2017-03-24 14:49:54"
         },
         {
             "name": "symfony/http-foundation",

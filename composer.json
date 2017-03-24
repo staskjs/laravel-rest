@@ -14,6 +14,8 @@
         "psr-4": {
             "Staskjs\\Rest\\": "src/"
         }
+    },
+    "require": {
+        "staskjs/laravel-utils": "^1.1"
     }
-
 }
