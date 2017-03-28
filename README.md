@@ -26,11 +26,6 @@ Then just extend your controller from `\Staskjs\Rest\RestController`,
 register `resource` route (`Route::resource`) pointing to your controller
 and you are good to go!
 
-You can also use our custom exception handler that will translate some laravel errors to json format
-if request is made from ajax.
-
-In `app/Exceptions/Handler.php` inherit handler from `\Staskjs\Rest\Exceptions\Handler`.
-
 ## Usage
 
 You can add Form Request Validation to every request there is.
