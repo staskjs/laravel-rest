@@ -17,9 +17,11 @@ class RestController extends Controller {
 
     protected $only_meta = false;
 
-    protected $with = [];
+    private $with = [];
 
     protected $allowedWith = [];
+
+    protected $fields = ['*'];
 
     protected $showTrashed = false;
 
@@ -186,11 +188,15 @@ class RestController extends Controller {
         }
 
         if (request()->has('with')) {
-            $this->with = explode(',', request('with'));
+            $this->with = explode(',', str_replace(' ', '', request('with')));
         }
 
         if (request()->has('show_trashed')) {
             $this->showTrashed = request('show_trashed') == 'true';
+        }
+
+        if (request()->has('fields')) {
+            $this->fields = explode(',', str_replace(' ', '', request('fields')));
         }
     }
 
@@ -201,7 +207,12 @@ class RestController extends Controller {
     protected function getItems() {
         $model = $this->getModel();
         $model = new $model();
-        $result = $this->getFiltered()->with($this->getWith())->orderBy($model->getTable().'.'.$this->sort, $this->order)->paginate($this->items_per_page);
+        $result = $this->getFiltered()
+            ->select($this->fields)
+            ->with($this->getWith())
+            ->orderBy($model->getTable().'.'.$this->sort, $this->order)
+            ->paginate($this->items_per_page);
+
         $this->appendAttributes($result->items(), $this->append);
         return [
             'items' => $result->items(),
@@ -260,6 +271,10 @@ class RestController extends Controller {
     // Override this method if you want custom logic to append values to models
     // Basically does not have to be overriden at any time
     protected function appendAttributes($items, $attributes = []) {
+        $attributes = collect($attributes)->filter(function($relation, $attribute) {
+            return $this->hasWith($relation) || is_null($relation);
+        })->keys()->all();
+
         if (is_array($items)) {
             foreach ($items as $item) {
                 $item->append($attributes);
@@ -281,6 +296,11 @@ class RestController extends Controller {
         return collect($this->with)->filter(function ($item) {
             return in_array($item, $this->allowedWith);
         })->toArray();
+    }
+
+    // Check if relation was requested with "with"
+    protected function hasWith($relation) {
+        return in_array($relation, $this->with);
     }
 
     // Check that model is soft deletable
