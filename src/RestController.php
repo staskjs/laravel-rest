@@ -271,9 +271,14 @@ class RestController extends Controller {
     // Override this method if you want custom logic to append values to models
     // Basically does not have to be overriden at any time
     protected function appendAttributes($items, $attributes = []) {
-        $attributes = collect($attributes)->filter(function($relation, $attribute) {
-            return $this->hasWith($relation) || is_null($relation);
-        })->keys()->all();
+        $isSimpleArray = array_values($attributes) === $attributes;
+
+        // If attribute array contains relations, then check that these relations were required
+        if (!$isSimpleArray) {
+            $attributes = collect($attributes)->filter(function($relation, $attribute) {
+                return is_null($attribute) || $this->hasWith($relation) || is_null($relation);
+            })->keys()->all();
+        }
 
         if (is_array($items)) {
             foreach ($items as $item) {
