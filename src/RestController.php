@@ -25,6 +25,11 @@ class RestController extends Controller {
 
     protected $showTrashed = false;
 
+    // You can use form request here for each of the REST methods
+    // Just assign class name:
+    // protected $indexRequest = MyIndexRequest::class;
+    // This makes local rules() method obsolete, because all validation goes inside form request
+    // So you should move validation rules there
     protected $indexRequest;
 
     protected $showRequest;
