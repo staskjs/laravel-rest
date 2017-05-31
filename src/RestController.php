@@ -215,7 +215,7 @@ class RestController extends Controller {
         $result = $this->getFiltered()
             ->select($this->fields)
             ->with($this->getWith())
-            ->orderBy($model->getTable().'.'.$this->sort, $this->order)
+            ->orderBy($model->getTable() . '.' . $this->sort, $this->order)
             ->paginate($this->items_per_page);
 
         $this->appendAttributes($result->items(), $this->append);
@@ -270,7 +270,7 @@ class RestController extends Controller {
 
     // Override this method if your model is under custom namespace
     protected function getModel() {
-        return '\\App\\'.$this->model;
+        return '\\App\\' . $this->model;
     }
 
     // Override this method if you want custom logic to append values to models
