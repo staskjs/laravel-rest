@@ -240,8 +240,9 @@ class RestController extends Controller {
             if ($this->isSoftDeletable() && $withTrashed) {
                 $builder = $builder->withTrashed();
             }
+            $primaryKey = (new $model)->getKeyName();
 
-            return $builder->whereId($item)->first();
+            return $builder->where($primaryKey, $item)->first();
         }
     }
 
