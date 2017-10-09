@@ -7,6 +7,8 @@ class RestController extends Controller {
 
     protected $model = null;
 
+    protected $resource = null;
+
     protected $items_per_page = 50;
 
     protected $sort = 'id';
@@ -154,6 +156,10 @@ class RestController extends Controller {
 
         if (!$this->only_data) {
             $meta = $this->generateMetadata();
+        }
+
+        if (!empty($this->resource)) {
+            $data = call_user_func([$this->resource, 'collection'], collect($data));
         }
 
         return response()->json(['data' => $data, 'meta' => $metadata + $meta]);
