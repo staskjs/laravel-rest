@@ -71,6 +71,10 @@ class RestController extends Controller {
 
         $object = $this->getItem($item);
         $object = $this->appendAttributes($object, $this->append);
+        if (!empty($this->resource)) {
+            $resource = $this->resource;
+            $object = new $resource($object);
+        }
         return response()->json($object);
     }
 
