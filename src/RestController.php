@@ -103,7 +103,15 @@ class RestController extends Controller {
             $this->afterSave($object);
 
             \DB::commit();
-            return response()->json($this->appendAttributes($object, $this->append));
+
+            if (!empty($this->resource)) {
+                $resource = $this->resource;
+                $object = new $resource($object);
+            }
+            else {
+                $object = $this->appendAttributes($object, $this->append);
+            }
+            return response()->json($object);
         });
     }
 
@@ -132,7 +140,15 @@ class RestController extends Controller {
             $this->afterSave($object);
 
             \DB::commit();
-            return response()->json($this->appendAttributes($object, $this->append));
+
+            if (!empty($this->resource)) {
+                $resource = $this->resource;
+                $object = new $resource($object);
+            }
+            else {
+                $object = $this->appendAttributes($object, $this->append);
+            }
+            return response()->json($object);
         });
     }
 
