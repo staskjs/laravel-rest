@@ -9,15 +9,15 @@ class RestController extends Controller {
 
     protected $resource = null;
 
-    protected $items_per_page = 50;
+    protected $itemsPerPage = 50;
 
     protected $sort = 'id';
 
     protected $order = 'desc';
 
-    protected $only_data = false;
+    protected $onlyData = false;
 
-    protected $only_meta = false;
+    protected $onlyMeta = false;
 
     private $with = [];
 
@@ -55,7 +55,7 @@ class RestController extends Controller {
 
         $model = $this->getModel();
 
-        if ($this->only_meta) {
+        if ($this->onlyMeta) {
             return $this->response();
         }
 
@@ -153,12 +153,16 @@ class RestController extends Controller {
         });
     }
 
+    public function getMetadata() {
+        return response()->json($this->generateMetadata());
+    }
+
     // Index response should include data (array of items)
     // and meta (some other data, eg. relative tables, etc)
     protected function response($data = [], $metadata = []) {
         $meta = [];
 
-        if (!$this->only_data) {
+        if (!$this->onlyData) {
             $meta = $this->generateMetadata();
         }
 
@@ -183,7 +187,7 @@ class RestController extends Controller {
     // Retreive common values from params to controller fields to be easily accesible
     protected function retreiveListParams() {
         if (request()->has('items_per_page')) {
-            $this->items_per_page = request('items_per_page');
+            $this->itemsPerPage = request('items_per_page');
         }
 
         if (request()->has('sort')) {
@@ -195,11 +199,11 @@ class RestController extends Controller {
         }
 
         if (request()->has('only_meta')) {
-            $this->only_meta = request('only_meta');
+            $this->onlyMeta = request('only_meta');
         }
 
         if (request()->has('only_data')) {
-            $this->only_data = request('only_data');
+            $this->onlyData = request('only_data');
         }
 
         if (request()->has('with')) {
@@ -222,11 +226,12 @@ class RestController extends Controller {
     protected function getItems() {
         $model = $this->getModel();
         $model = new $model();
+        $itemsPerPage = $this->itemsPerPage == 'all' ? 999999999 : $this->itemsPerPage;
         $result = $this->getFiltered()
             ->select($this->fields)
             ->with($this->getWith())
             ->orderBy($model->getTable() . '.' . $this->sort, $this->order)
-            ->paginate($this->items_per_page);
+            ->paginate($itemsPerPage);
 
         $this->appendAttributes($result->items(), $this->append);
         return [
