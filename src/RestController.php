@@ -245,11 +245,15 @@ class RestController extends Controller {
         $model = $this->getModel();
         $model = new $model();
         $itemsPerPage = $this->itemsPerPage == 'all' ? 999999999 : $this->itemsPerPage;
-        $result = $this->getFiltered()
+        $query = $this->getFiltered()
             ->select($this->fields)
-            ->with($this->getWith())
-            ->orderBy($model->getTable() . '.' . $this->sort, $this->order)
-            ->paginate($itemsPerPage);
+            ->with($this->getWith());
+
+        if ($this->sort) {
+            $query = $query->orderBy($model->getTable() . '.' . $this->sort, $this->order);
+        }
+
+        $result = $query->paginate($itemsPerPage);
 
         $this->appendAttributes($result->items(), $this->append);
         return [
