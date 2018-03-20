@@ -102,6 +102,7 @@ class RestController extends Controller {
             $object->save();
             $object = $this->afterSave($object);
             $object->refresh();
+            $object = $object->getItem($object);
 
             \DB::commit();
 
