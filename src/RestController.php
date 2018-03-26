@@ -100,7 +100,7 @@ class RestController extends Controller {
             $object = $this->beforeSave($object);
 
             $object->save();
-            $object = $this->afterSave($object);
+            $this->afterSave($object);
             $object->refresh();
             $object = $object->getItem($object);
 
@@ -139,7 +139,7 @@ class RestController extends Controller {
             $object = $this->beforeSave($object);
 
             $object->save();
-            $object = $this->afterSave($object);
+            $this->afterSave($object);
             $object->refresh();
 
             \DB::commit();
