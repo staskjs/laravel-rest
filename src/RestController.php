@@ -309,6 +309,9 @@ class RestController extends Controller {
 
     // Override this method if your model is under custom namespace
     protected function getModel() {
+        if (starts_with($this->model, 'App\\')) {
+            return $this->model;
+        }
         return '\\App\\' . $this->model;
     }
 
