@@ -243,19 +243,13 @@ class RestController extends Controller {
     // or custom pagination)
     // Should return array of items and total number of items
     protected function getItems() {
-        $model = $this->getModel();
-        $model = new $model();
         $itemsPerPage = $this->itemsPerPage == 'all' ? 999999999 : $this->itemsPerPage;
         $query = $this->getFiltered()
             ->select($this->fields)
             ->with($this->getWith());
 
-        if ($this->sort) {
-            $query = $query->orderBy($model->getTable() . '.' . $this->sort, $this->order);
-        }
-
-        $result = $query->paginate($itemsPerPage);
-
+        $result = $this->smartSort($query)->paginate($itemsPerPage);
+        
         $this->appendAttributes($result->items(), $this->append);
         return [
             'items' => $result->items(),
@@ -315,6 +309,14 @@ class RestController extends Controller {
         return '\\App\\' . $this->model;
     }
 
+    // Override this method if you want to custom sort model
+    protected function smartSort($query) {
+        if ($this->sort) {
+            return $query->orderBy($this->getTableName() . '.' . $this->sort, $this->order);
+        }
+        return $query;
+    }
+
     // Override this method if you want custom logic to append values to models
     // Basically does not have to be overriden at any time
     protected function appendAttributes($items, $attributes = []) {
@@ -361,4 +363,12 @@ class RestController extends Controller {
         return in_array(SoftDeletes::class, $traits);
     }
 
+    // Get model table name
+    protected function getTableName() {
+        $model = $this->getModel();
+        $model = new $model();
+
+        return $model->getTable();
+    }
 }
+
