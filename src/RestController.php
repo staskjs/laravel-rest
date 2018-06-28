@@ -27,6 +27,8 @@ class RestController extends Controller {
 
     protected $showTrashed = false;
 
+    protected $getItemBy;
+
     // You can use form request here for each of the REST methods
     // Just assign class name:
     // protected $indexRequest = MyIndexRequest::class;
@@ -249,7 +251,7 @@ class RestController extends Controller {
             ->with($this->getWith());
 
         $result = $this->smartSort($query)->paginate($itemsPerPage);
-        
+
         $this->appendAttributes($result->items(), $this->append);
         return [
             'items' => $result->items(),
@@ -272,7 +274,9 @@ class RestController extends Controller {
             if ($this->isSoftDeletable() && $withTrashed) {
                 $builder = $builder->withTrashed();
             }
-            $primaryKey = (new $model)->getKeyName();
+            $primaryKey = !empty($this->getItemBy)
+                ? $this->getItemBy
+                : (new $model)->getKeyName();
 
             return $builder->where($primaryKey, $item)->first();
         }
