@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RestController extends Controller {
 
@@ -278,7 +279,10 @@ class RestController extends Controller {
                 ? $this->getItemBy
                 : (new $model)->getKeyName();
 
-            return $builder->where($primaryKey, $item)->first();
+            $res = $builder->where($primaryKey, $item)->first();
+            if (!$res) {
+                throw new ModelNotFoundException("{$model} with {$primaryKey} = {$item} was not found");
+            }
         }
     }
 
