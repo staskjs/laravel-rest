@@ -283,6 +283,7 @@ class RestController extends Controller {
             if (!$res) {
                 throw new ModelNotFoundException("{$model} with {$primaryKey} = {$item} was not found");
             }
+            return $res;
         }
     }
 
